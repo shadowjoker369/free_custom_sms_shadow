@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SMS to Telegram - SHADOW JOKER</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      background: radial-gradient(circle at center, #0f0f0f, #1e1e1e);
+      font-family: 'Orbitron', sans-serif;
+      color: #0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 20px;
+    }
+    .main-box {
+      background-color: #111;
+      border: 2px solid #0f0;
+      border-radius: 15px;
+      padding: 25px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 0 15px #0f0;
+    }
+    h2 {
+      text-align: center;
+      color: #0ff;
+      text-shadow: 0 0 15px #0ff;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      background: #222;
+      border: 1px solid #0f0;
+      color: #0f0;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      background: #0f0;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      margin-top: 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #0c0;
+    }
+    .output {
+      background: #000;
+      color: #0f0;
+      padding: 10px;
+      margin-top: 15px;
+      border: 1px solid #0f0;
+      border-radius: 10px;
+      height: 120px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+    .credit {
+      text-align: center;
+      margin-top: 15px;
+      color: #ff0;
+      text-shadow: 0 0 10px #ff0;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-box">
+    <h2>📲 SMS to Telegram</h2>
+
+    <label>📞 Receiver Number (Without +88):</label>
+    <input type="text" id="numberInput" placeholder="e.g. 017xxxxxxxx" maxlength="11">
+
+    <label>💬 Custom Message:</label>
+    <textarea id="messageInput" rows="3" placeholder="Type your message here..."></textarea>
+
+    <button onclick="sendSMS()">🚀 Send Message</button>
+
+    <div class="output" id="outputBox">Response will show here...</div>
+
+    <div class="credit">⚡ Powered by <span style="color:#f0f;text-shadow:0 0 10px #f0f;">SHADOW JOKER</span></div>
+  </div>
+
+  <script>
+    function sendSMS() {
+      const number = document.getElementById("numberInput").value.trim();
+      const message = document.getElementById("messageInput").value.trim();
+      const output = document.getElementById("outputBox");
+
+      if (number.length !== 11 || !/^01[3-9][0-9]{8}$/.test(number)) {
+        output.innerText = "❌ Invalid Bangladeshi number format!";
+        return;
+      }
+
+      if (!message) {
+        output.innerText = "❌ Message cannot be empty!";
+        return;
+      }
+
+      const url = `/api/send-message?number=${encodeURIComponent(number)}&message=${encodeURIComponent(message)}`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          if (data.ok) {
+            output.innerText = "✅ Message sent successfully!";
+          } else {
+            output.innerText = "❌ Telegram Error: " + JSON.stringify(data);
+          }
+        })
+        .catch(error => {
+          output.innerText = "❌ Failed to send: " + error.message;
+        });
+    }
+  </script>
+</body>
+</html>
